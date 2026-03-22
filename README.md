@@ -1,1 +1,379 @@
-Test
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>智能物理题练习系统</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        main {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        #stats-panel {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .stat-item {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .stat-label {
+            display: block;
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .stat-value {
+            display: block;
+            font-size: 1.4em;
+            font-weight: bold;
+            color: #333;
+        }
+
+        #question-container {
+            margin-bottom: 25px;
+        }
+
+        #question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        #question-category {
+            background: #3498db;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+        }
+
+        #question-difficulty {
+            background: #2ecc71;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+        }
+
+        #question-difficulty.medium {
+            background: #f39c12;
+        }
+
+        #question-difficulty.hard {
+            background: #e74c3c;
+        }
+
+        #question-text {
+            font-size: 1.2em;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+
+        .question-options {
+            margin-bottom: 15px;
+        }
+
+        .option-btn {
+            display: block;
+            width: 100%;
+            padding: 15px 20px;
+            margin-bottom: 10px;
+            background: #f8f9fa;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1em;
+        }
+
+        .option-btn:hover {
+            background: #e9ecef;
+            border-color: #3498db;
+            transform: translateX(5px);
+        }
+
+        .option-btn.selected {
+            background: #3498db;
+            color: white;
+            border-color: #2980b9;
+        }
+
+        .option-btn.correct {
+            background: #2ecc71;
+            color: white;
+            border-color: #27ae60;
+        }
+
+        .option-btn.incorrect {
+            background: #e74c3c;
+            color: white;
+            border-color: #c0392b;
+        }
+
+        #answer-input, #formula-answer {
+            width: 70%;
+            padding: 12px;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            font-size: 1em;
+            margin-bottom: 10px;
+        }
+
+        #answer-input:focus, #formula-answer:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+
+        .submit-btn {
+            padding: 12px 25px;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            margin-left: 10px;
+            transition: background 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            background: #2980b9;
+        }
+
+        #formula-buttons {
+            margin-bottom: 15px;
+        }
+
+        .formula-btn {
+            padding: 8px 15px;
+            margin: 5px;
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1em;
+        }
+
+        .formula-btn:hover {
+            background: #e9ecef;
+        }
+
+        #feedback-container {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            min-height: 80px;
+        }
+
+        #feedback-message {
+            font-size: 1.1em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        #feedback-message.correct {
+            color: #2ecc71;
+        }
+
+        #feedback-message.incorrect {
+            color: #e74c3c;
+        }
+
+        #feedback-explanation {
+            line-height: 1.5;
+            color: #555;
+        }
+
+        .next-btn {
+            margin-top: 15px;
+            padding: 12px 25px;
+            background: #27ae60;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+
+        .next-btn:hover {
+            background: #229954;
+        }
+
+        #controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .control-btn {
+            padding: 12px 25px;
+            background: #6c757d;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background 0.3s ease;
+        }
+
+        .control-btn:hover {
+            background: #5a6268;
+        }
+
+        .control-btn:active {
+            transform: scale(0.98);
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 10px;
+            }
+            
+            main {
+                padding: 20px;
+            }
+            
+            header h1 {
+                font-size: 2em;
+            }
+            
+            #stats-panel {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            #controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .control-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>智能物理题练习系统</h1>
+            <p>根据你的答题情况智能调整难度</p>
+        </header>
+
+        <main>
+            <div id="stats-panel">
+                <div class="stat-item">
+                    <span class="stat-label">当前难度</span>
+                    <span id="current-difficulty" class="stat-value">简单</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">连续答对</span>
+                    <span id="streak" class="stat-value">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">正确率</span>
+                    <span id="accuracy" class="stat-value">0%</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">总题数</span>
+                    <span id="total-questions" class="stat-value">0</span>
+                </div>
+            </div>
+
+            <div id="question-container">
+                <div id="question-header">
+                    <span id="question-category"></span>
+                    <span id="question-difficulty"></span>
+                </div>
+                <div id="question-text"></div>
+                <div id="question-image"></div>
+                <div id="options-container">
+                    <div id="multiple-choice" class="question-options"></div>
+                    <div id="input-answer" class="question-options">
+                        <input type="text" id="answer-input" placeholder="请输入答案...">
+                        <button id="submit-input" class="submit-btn">提交答案</button>
+                    </div>
+                    <div id="formula-input" class="question-options">
+                        <div id="formula-buttons">
+                            <button class="formula-btn" data-symbol="π">π</button>
+                            <button class="formula-btn" data-symbol="√">√</button>
+                            <button class="formula-btn" data-symbol="²">²</button>
+                            <button class="formula-btn" data-symbol="³">³</button>
+                            <button class="formula-btn" data-symbol="×">×</button>
+                            <button class="formula-btn" data-symbol="÷">÷</button>
+                        </div>
+                        <input type="text" id="formula-answer" placeholder="请输入公式答案...">
+                        <button id="submit-formula" class="submit-btn">提交答案</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="feedback-container">
+                <div id="feedback-message"></div>
+                <div id="feedback-explanation"></div>
+                <button id="next-question" class="next-btn" style="display: none;">下一题</button>
+            </div>
+
+            <div id="controls">
+                <button id="new-session" class="control-btn">新练习</button>
+                <button id="hint" class="control-btn">提示</button>
+                <button id="skip" class="control-btn">跳过</button>
+            </div>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
