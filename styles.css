@@ -1,0 +1,661 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Microsoft YaHei', 'SimHei', sans-serif;
+    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+    color: #ecf0f1;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* 游戏容器 */
+#game-container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+}
+
+/* 屏幕切换 */
+.screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: none;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+}
+
+.screen.active {
+    display: flex;
+    opacity: 1;
+}
+
+/* 主菜单 */
+#main-menu {
+    justify-content: center;
+    align-items: center;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800"><rect fill="%232c3e50" width="1200" height="800"/><text x="600" y="400" text-anchor="middle" fill="%23344" font-size="120" font-family="serif">三国</text></svg>') center/cover;
+}
+
+.menu-background {
+    text-align: center;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 60px;
+    border-radius: 20px;
+    backdrop-filter: blur(10px);
+}
+
+.game-title {
+    font-size: 3em;
+    color: #e74c3c;
+    text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.5);
+    margin-bottom: 50px;
+    font-weight: bold;
+    background: linear-gradient(45deg, #e74c3c, #f39c12);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.menu-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+}
+
+.menu-btn {
+    padding: 18px 60px;
+    font-size: 1.2em;
+    background: linear-gradient(135deg, #e74c3c, #c0392b);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 6px 20px rgba(231, 76, 60, 0.3);
+    font-weight: bold;
+    min-width: 200px;
+}
+
+.menu-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(231, 76, 60, 0.4);
+    background: linear-gradient(135deg, #c0392b, #a93226);
+}
+
+.menu-btn:active {
+    transform: translateY(-1px);
+}
+
+/* 内政界面 */
+#domestic-screen {
+    flex-direction: column;
+    background: linear-gradient(135deg, #2c3e50, #34495e);
+}
+
+.screen-header {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    backdrop-filter: blur(10px);
+    border-bottom: 2px solid #e74c3c;
+}
+
+.screen-header h2 {
+    color: #f39c12;
+    font-size: 1.8em;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.resources {
+    display: flex;
+    gap: 30px;
+    font-size: 1.1em;
+}
+
+.resources span {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 8px 15px;
+    border-radius: 20px;
+    border: 1px solid #f39c12;
+    font-weight: bold;
+}
+
+.domestic-content {
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+    flex: 1;
+    overflow-y: auto;
+}
+
+.city-panel, .general-panel, .faction-panel {
+    background: rgba(0, 0, 0, 0.4);
+    border-radius: 15px;
+    padding: 20px;
+    backdrop-filter: blur(10px);
+    border: 1px solid #34495e;
+    flex: 1;
+}
+
+.city-panel h3, .general-panel h3, .faction-panel h3 {
+    color: #f39c12;
+    margin-bottom: 15px;
+    text-align: center;
+    font-size: 1.3em;
+}
+
+#city-list, #general-list {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.city-item, .general-item {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 12px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-left: 4px solid #3498db;
+}
+
+.city-item:hover, .general-item:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateX(5px);
+    border-left-color: #f39c12;
+}
+
+.general-actions, .domestic-actions {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.action-btn {
+    padding: 10px 20px;
+    background: linear-gradient(135deg, #3498db, #2980b9);
+    color: white;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.9em;
+    font-weight: bold;
+}
+
+.action-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+}
+
+/* 卡牌战斗界面 */
+#battle-screen {
+    flex-direction: column;
+    background: linear-gradient(135deg, #1a1a1a, #2d2d2d);
+}
+
+.battle-header {
+    background: rgba(0, 0, 0, 0.5);
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #e74c3c;
+}
+
+.battle-info h3 {
+    color: #f39c12;
+    font-size: 1.5em;
+}
+
+.battle-field {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    gap: 20px;
+}
+
+.enemy-area, .player-area {
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.battle-center {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 20px;
+    border-radius: 15px;
+    min-height: 120px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.phase-indicator {
+    background: linear-gradient(135deg, #f39c12, #e67e22);
+    padding: 10px 30px;
+    border-radius: 25px;
+    font-size: 1.2em;
+    font-weight: bold;
+    color: white;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.battle-log {
+    background: rgba(0, 0, 0, 0.5);
+    padding: 15px;
+    border-radius: 10px;
+    width: 100%;
+    max-height: 80px;
+    overflow-y: auto;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9em;
+    line-height: 1.4;
+}
+
+.general-info {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 15px;
+    border-radius: 10px;
+    border: 2px solid #3498db;
+}
+
+.general-info h4 {
+    color: #f39c12;
+    margin-bottom: 10px;
+}
+
+.general-stats {
+    display: flex;
+    gap: 20px;
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.stat-value {
+    font-size: 1.3em;
+    font-weight: bold;
+    color: #3498db;
+}
+
+.stat-label {
+    font-size: 0.8em;
+    color: #95a5a6;
+}
+
+.hand-area {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+    min-height: 140px;
+    padding: 15px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+}
+
+/* 卡牌样式 */
+.card {
+    width: 100px;
+    height: 140px;
+    background: linear-gradient(135deg, #2c3e50, #34495e);
+    border: 2px solid #f39c12;
+    border-radius: 8px;
+    padding: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.card:hover {
+    transform: translateY(-10px) scale(1.05);
+    box-shadow: 0 8px 25px rgba(243, 156, 18, 0.4);
+    z-index: 10;
+}
+
+.card.selected {
+    border-color: #e74c3c;
+    transform: translateY(-5px);
+    box-shadow: 0 6px 20px rgba(231, 76, 60, 0.5);
+}
+
+.card-back {
+    width: 100px;
+    height: 140px;
+    background: linear-gradient(135deg, #7f8c8d, #95a5a6);
+    border: 2px solid #34495e;
+    border-radius: 8px;
+    position: relative;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.card-back::after {
+    content: '三国';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.5em;
+    color: #2c3e50;
+    font-weight: bold;
+}
+
+.card-name {
+    font-size: 0.9em;
+    font-weight: bold;
+    color: #f39c12;
+    text-align: center;
+    margin-bottom: 5px;
+    border-bottom: 1px solid #f39c12;
+    padding-bottom: 3px;
+}
+
+.card-cost {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: #e74c3c;
+    color: white;
+    border-radius: 50%;
+    width: 25px;
+    height: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 0.9em;
+}
+
+.card-type {
+    font-size: 0.7em;
+    color: #95a5a6;
+    text-align: center;
+    margin-bottom: 5px;
+}
+
+.card-effect {
+    font-size: 0.7em;
+    color: #ecf0f1;
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.2;
+}
+
+.battle-controls {
+    background: rgba(0, 0, 0, 0.5);
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    border-top: 2px solid #e74c3c;
+}
+
+.battle-btn {
+    padding: 12px 30px;
+    background: linear-gradient(135deg, #e74c3c, #c0392b);
+    color: white;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1em;
+    font-weight: bold;
+}
+
+.battle-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+}
+
+.battle-btn:disabled {
+    background: #7f8c8d;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+/* 游戏说明界面 */
+#instructions-screen {
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #2c3e50, #34495e);
+}
+
+.instructions-content {
+    background: rgba(0, 0, 0, 0.7);
+    padding: 40px;
+    border-radius: 20px;
+    max-width: 800px;
+    max-height: 80vh;
+    overflow-y: auto;
+    backdrop-filter: blur(10px);
+}
+
+.instruction-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    justify-content: center;
+}
+
+.tab-btn {
+    padding: 10px 20px;
+    background: #34495e;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.tab-btn.active {
+    background: #f39c12;
+    color: #2c3e50;
+    font-weight: bold;
+}
+
+.instruction-content {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 20px;
+    border-radius: 10px;
+    line-height: 1.6;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.back-btn {
+    margin-top: 20px;
+    padding: 12px 30px;
+    background: #e74c3c;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: bold;
+}
+
+/* 游戏结束界面 */
+#game-over-screen {
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #1a1a1a, #2d2d2d);
+}
+
+.game-over-content {
+    text-align: center;
+    background: rgba(0, 0, 0, 0.8);
+    padding: 40px;
+    border-radius: 20px;
+    backdrop-filter: blur(10px);
+}
+
+#game-over-title {
+    font-size: 2.5em;
+    color: #e74c3c;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+#game-over-message {
+    font-size: 1.2em;
+    color: #ecf0f1;
+    margin-bottom: 30px;
+}
+
+.game-over-stats {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+}
+
+/* 模态框 */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(5px);
+}
+
+.modal-content {
+    background: linear-gradient(135deg, #2c3e50, #34495e);
+    margin: 10% auto;
+    padding: 30px;
+    border-radius: 20px;
+    width: 80%;
+    max-width: 500px;
+    position: relative;
+    border: 2px solid #f39c12;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.close {
+    color: #ecf0f1;
+    position: absolute;
+    right: 20px;
+    top: 15px;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.close:hover {
+    color: #e74c3c;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .game-title {
+        font-size: 2em;
+    }
+    
+    .domestic-content {
+        flex-direction: column;
+    }
+    
+    .resources {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    
+    .resources span {
+        font-size: 0.9em;
+        padding: 5px 10px;
+    }
+    
+    .battle-field {
+        padding: 10px;
+    }
+    
+    .hand-area {
+        gap: 10px;
+    }
+    
+    .card {
+        width: 80px;
+        height: 112px;
+    }
+    
+    .card-back {
+        width: 80px;
+        height: 112px;
+    }
+}
+
+/* 动画效果 */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+@keyframes slideIn {
+    from { transform: translateX(-100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+.card {
+    animation: fadeIn 0.5s ease-out;
+}
+
+.card:hover {
+    animation: pulse 1s infinite;
+}
+
+.city-item, .general-item {
+    animation: slideIn 0.3s ease-out;
+}
+
+/* 滚动条样式 */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #f39c12;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #e67e22;
+}

@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>智能体游戏中心</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 50px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            max-width: 800px;
+            backdrop-filter: blur(10px);
+        }
+
+        h1 {
+            color: #2c3e50;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            color: #7f8c8d;
+            font-size: 1.2em;
+            margin-bottom: 40px;
+        }
+
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .game-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px 20px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            border: 2px solid transparent;
+        }
+
+        .game-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            border-color: #667eea;
+        }
+
+        .game-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+
+        .game-title {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .game-description {
+            color: #7f8c8d;
+            font-size: 0.9em;
+            line-height: 1.4;
+        }
+
+        .instructions {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 30px;
+            text-align: left;
+        }
+
+        .instructions h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .instructions ol {
+            color: #555;
+            line-height: 1.6;
+            margin-left: 20px;
+        }
+
+        .instructions li {
+            margin-bottom: 8px;
+        }
+
+        .troubleshoot {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 20px;
+            color: #856404;
+            text-align: left;
+        }
+
+        .troubleshoot h4 {
+            margin-bottom: 10px;
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+
+        .status-ready {
+            background: #28a745;
+        }
+
+        .status-warning {
+            background: #ffc107;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎮 智能体游戏中心</h1>
+        <p class="subtitle">选择你想要体验的智能体游戏</p>
+
+        <div class="games-grid">
+            <a href="physics-tutor.html" class="game-card">
+                <div class="game-icon">🔬</div>
+                <div class="game-title">物理题智能体</div>
+                <div class="game-description">自适应难度的物理题练习系统，根据答题表现智能调整</div>
+            </a>
+
+            <a href="sanguo-game.html" class="game-card">
+                <div class="game-icon">⚔️</div>
+                <div class="game-title">三国融合游戏</div>
+                <div class="game-description">内政系统 + 卡牌战斗的策略游戏</div>
+            </a>
+
+            <a href="chess.html" class="game-card">
+                <div class="game-icon">♟️</div>
+                <div class="game-title">国际象棋</div>
+                <div class="game-description">专业级AI对手，完整国际象棋规则</div>
+            </a>
+        </div>
+
+        <div class="instructions">
+            <h3><span class="status-indicator status-ready"></span>使用说明</h3>
+            <ol>
+                <li><strong>直接点击游戏卡片</strong> - 大部分现代浏览器都支持直接打开</li>
+                <li><strong>如果遇到安全限制</strong> - 浏览器可能提示"文件被阻止"，点击"允许"或"继续"</li>
+                <li><strong>Chrome用户</strong> - 如果看到"已被阻止"，地址栏右侧会出现盾牌图标，点击它然后选择"加载不安全的脚本"</li>
+                <li><strong>Edge用户</strong> - 类似Chrome，会有安全提示，选择"继续"</li>
+            </ol>
+        </div>
+
+        <div class="troubleshoot">
+            <h4><span class="status-indicator status-warning"></span>遇到问题？</h4>
+            <p><strong>方案1：</strong> 尝试用不同的浏览器（Edge、Firefox、Chrome）</p>
+            <p><strong>方案2：</strong> 右键HTML文件 → "打开方式" → 选择你的浏览器</p>
+            <p><strong>方案3：</strong> 双击 <code>start-server.bat</code> 文件启动本地服务器（推荐）</p>
+        </div>
+
+        <div class="error-message" id="error-message">
+            游戏加载失败，请尝试右键文件用浏览器打开，或启动本地服务器。
+        </div>
+    </div>
+
+    <script>
+        // 检查链接是否有效
+        document.querySelectorAll('.game-card').forEach(card => {
+            card.addEventListener('click', function(e) {
+                const href = this.getAttribute('href');
+                
+                // 尝试在新窗口打开
+                try {
+                    window.open(href, '_blank');
+                } catch (error) {
+                    // 如果失败，显示错误信息
+                    document.getElementById('error-message').style.display = 'block';
+                    setTimeout(() => {
+                        document.getElementById('error-message').style.display = 'none';
+                    }, 5000);
+                }
+            });
+        });
+
+        // 添加页面加载提示
+        window.addEventListener('load', () => {
+            console.log('游戏中心已加载完成！');
+            console.log('如果游戏无法直接打开，请启动本地服务器：双击 start-server.bat');
+        });
+    </script>
+</body>
+</html>

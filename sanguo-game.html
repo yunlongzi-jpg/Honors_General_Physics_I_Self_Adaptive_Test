@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>三国融合：群英卡牌战</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="game-container">
+        <!-- 游戏主界面 -->
+        <div id="main-menu" class="screen active">
+            <div class="menu-background">
+                <h1 class="game-title">三国融合：群英卡牌战</h1>
+                <div class="menu-buttons">
+                    <button class="menu-btn" onclick="game.newGame()">开始新游戏</button>
+                    <button class="menu-btn" onclick="game.loadGame()">继续游戏</button>
+                    <button class="menu-btn" onclick="game.showInstructions()">游戏说明</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 内政界面 -->
+        <div id="domestic-screen" class="screen">
+            <div class="screen-header">
+                <h2>内政管理</h2>
+                <div class="resources">
+                    <span>金币: <span id="gold">1000</span></span>
+                    <span>粮食: <span id="food">1000</span></span>
+                    <span>兵力: <span id="troops">100</span></span>
+                    <span>回合: <span id="turn">1</span></span>
+                </div>
+            </div>
+            
+            <div class="domestic-content">
+                <!-- 城市列表 -->
+                <div class="city-panel">
+                    <h3>城市管理</h3>
+                    <div id="city-list"></div>
+                </div>
+
+                <!-- 武将列表 -->
+                <div class="general-panel">
+                    <h3>武将管理</h3>
+                    <div class="general-actions">
+                        <button class="action-btn" onclick="game.recruitGeneral()">招募武将</button>
+                        <button class="action-btn" onclick="game.assignGeneral()">指派武将</button>
+                    </div>
+                    <div id="general-list"></div>
+                </div>
+
+                <!-- 势力信息 -->
+                <div class="faction-panel">
+                    <h3>势力信息</h3>
+                    <div id="faction-info"></div>
+                    <div class="domestic-actions">
+                        <button class="action-btn" onclick="game.nextTurn()">下回合</button>
+                        <button class="action-btn" onclick="game.startBattle()">发动战争</button>
+                        <button class="action-btn" onclick="game.showDiplomacy()">外交</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 卡牌战斗界面 -->
+        <div id="battle-screen" class="screen">
+            <div class="battle-header">
+                <div class="battle-info">
+                    <h3>卡牌战斗</h3>
+                    <span>回合: <span id="battle-turn">1</span></span>
+                </div>
+            </div>
+
+            <div class="battle-field">
+                <!-- 敌方区域 -->
+                <div class="enemy-area">
+                    <div class="general-info" id="enemy-general">
+                        <h4>敌方武将</h4>
+                        <div class="general-stats"></div>
+                    </div>
+                    <div class="hand-area" id="enemy-hand">
+                        <div class="card-back"></div>
+                        <div class="card-back"></div>
+                        <div class="card-back"></div>
+                        <div class="card-back"></div>
+                    </div>
+                </div>
+
+                <!-- 战斗信息区 -->
+                <div class="battle-center">
+                    <div class="phase-indicator" id="phase-indicator">准备阶段</div>
+                    <div class="battle-log" id="battle-log"></div>
+                </div>
+
+                <!-- 玩家区域 -->
+                <div class="player-area">
+                    <div class="hand-area" id="player-hand"></div>
+                    <div class="general-info" id="player-general">
+                        <h4>我方武将</h4>
+                        <div class="general-stats"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="battle-controls">
+                <button class="battle-btn" onclick="game.endPhase()" id="end-phase-btn">结束阶段</button>
+                <button class="battle-btn" onclick="game.useSkill()" id="skill-btn">使用技能</button>
+                <button class="battle-btn" onclick="game.retreat()" id="retreat-btn">撤退</button>
+            </div>
+        </div>
+
+        <!-- 游戏说明界面 -->
+        <div id="instructions-screen" class="screen">
+            <div class="instructions-content">
+                <h2>游戏说明</h2>
+                <div class="instruction-tabs">
+                    <button class="tab-btn active" onclick="game.showTab('domestic')">内政系统</button>
+                    <button class="tab-btn" onclick="game.showTab('battle')">卡牌战斗</button>
+                    <button class="tab-btn" onclick="game.showTab('cards')">卡牌说明</button>
+                </div>
+                <div class="instruction-content" id="instruction-content">
+                    <!-- 动态内容区域 -->
+                </div>
+                <button class="back-btn" onclick="game.backToMenu()">返回主菜单</button>
+            </div>
+        </div>
+
+        <!-- 游戏结束界面 -->
+        <div id="game-over-screen" class="screen">
+            <div class="game-over-content">
+                <h2 id="game-over-title">游戏结束</h2>
+                <p id="game-over-message"></p>
+                <div class="game-over-stats"></div>
+                <button class="menu-btn" onclick="game.newGame()">重新开始</button>
+                <button class="menu-btn" onclick="game.backToMenu()">返回主菜单</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 卡牌详情弹窗 -->
+    <div id="card-detail-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="game.closeModal()">&times;</span>
+            <div id="card-detail-content"></div>
+        </div>
+    </div>
+
+    <!-- 武将详情弹窗 -->
+    <div id="general-detail-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="game.closeModal()">&times;</span>
+            <div id="general-detail-content"></div>
+        </div>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+</html>
